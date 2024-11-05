@@ -60,10 +60,6 @@ RUN wget https://storage.googleapis.com/chrome-for-testing-public/130.0.6723.69/
 # Verify that chromedriver exists at the expected path
 RUN ls -l /app/src/test/resources/webFiles/chromedriver
 
-# Build and run tests
-RUN mvn install
-RUN mvn clean test
-
 # Verify installations
 RUN ls -l /opt/chrome/chrome
 RUN /opt/chrome/chrome --version
