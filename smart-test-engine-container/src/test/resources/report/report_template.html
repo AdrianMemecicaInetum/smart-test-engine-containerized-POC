@@ -1,0 +1,469 @@
+<html>
+
+<head>
+    <style>
+        body {
+            background: linear-gradient(80deg, #232f4d, #ffffff);
+            background-attachment: fixed;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            margin: 0;
+            height: 100%;
+            overflow: hidden
+        }
+
+        .nav-bar {
+            justify-content: space-between;
+            background-color: #232d4b;
+            display: inline-flex;
+            width: 100%;
+            height: 70px;
+            z-index: 999;
+        }
+
+        .nav-buttons a {
+            font-family: Arial, Helvetica, sans-serif;
+            text-decoration: none;
+            font-size: 15px;
+            display: inline-block;
+            margin: 10px;
+        }
+
+        .nav-buttons a:hover {
+            text-decoration: underline;
+        }
+
+        .left-panel {
+            background-color: #fff;
+            border-radius: 20px;
+            margin: 0.5%;
+            width: 49%;
+            height: 87%;
+            float: left;
+            justify-content: center;
+        }
+
+        .left-panel table {
+            display: inline-block;
+            font-family: Arial, Helvetica, sans-serif;
+            text-align: left;
+            padding-left: 2%;
+            padding-top: 1%;
+        }
+
+        .left-panel th {
+            color: grey;
+            font-size: 15px;
+        }
+
+        .left-panel td {
+            color: black;
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .right-panel {
+            background-color: #fff;
+            border-radius: 20px;
+            margin: 0.5%;
+            width: 49%;
+            height: 87%;
+            float: right;
+            position: relative;
+            overflow: auto;
+        }
+
+        .right-panel td {
+            border-bottom: 1px solid black;
+        }
+
+        .right-panel table thead {
+            position: sticky;
+            top: 0px;
+            height: 40px;
+            background: #005573;
+        }
+
+        .right-panel th {
+            border-bottom: 1px solid #005573;
+        }
+
+        .right-panel table {
+            font-family: Arial, Helvetica, sans-serif;
+            text-align: center;
+            color: grey;
+            height: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border-radius: 15px;
+            overflow: hidden;
+            width: 100%;
+            margin: 0 auto;
+            position: relative;
+            border: 1px;
+        }
+
+        .right-panel td {
+            margin-top: 40px;
+        }
+
+        #rightPanelHeader {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 18px;
+            color: #fff;
+            line-height: 1.2;
+            font-weight: unset;
+        }
+
+        #rightPanelHeaderDiv {
+            position: sticky;
+        }
+
+        #stackedchart {
+            height: 35%;
+            width: 99%;
+        }
+
+        #columnchart {
+            height: 35%;
+            width: 99%;
+        }
+
+        /* The sticky class is added to the header with JS when it reaches its scroll position */
+        .sticky {
+            position: sticky;
+        }
+    </style>
+</head>
+
+<body>
+    <div class='body-panel'>
+        <nav id='headerId' class='nav-bar'>
+            <img src='./logo.svg' alt='Mi imagen SVG'
+                style='margin: 10px; margin-left: 20px;'>
+            <img src='./STELogo.png' alt='Mi imagen SVG'
+                style='border-radius: 8px; margin: 10px;'>
+            <img src='./pixels.PNG' alt='pixels'>
+            <!--<div class='nav-buttons'>
+                    <a href='#' style='color:#FFF;'>Vista Directiva</a>
+                    <a href='#' style='color:#FFF;'>Vista General</a>
+                    <a href='#' style='color:#FFF;'>Vista Detallada</a>
+                </div>-->
+        </nav>
+
+        <div id='left-panel' class='left-panel'>
+            <div id='resume-panel' style='width: 100%;'>
+                <div id='top-resume-panel'>
+                    <table id='left-resume-panel'>
+                        <tr>
+                            <td rowspan='2'><img
+                                    src='./testsSuitesInvolved.svg'
+                                    width='60' height='60'></td>
+                            <th>Test Suites Involved</th>
+                        </tr>
+                        <tr>
+                            <td id='test-suites-involved'></td>
+                        </tr>
+                        <tr>
+                            <td rowspan='2'><img
+                                    src='./testsExecuted.svg'
+                                    width='60' height='60'></td>
+                            <th>Test Executed</th>
+                        </tr>
+                        <tr>
+                            <td id='tests-executed'></td>
+                        </tr>
+                        <tr>
+                            <td rowspan='2'><img
+                                    src='./totalExecutionTime.svg'
+                                    width='60' height='60'></td>
+                            <th>Total execution time</th>
+                        </tr>
+                        <tr>
+                            <td id='total-execution-time'>03:32:16</td>
+                        </tr>
+                    </table>
+                    <table id='center-resume-panel'>
+                        <tr>
+                            <td rowspan='2'><img
+                                    src='./currentSuccess.svg'
+                                    width='60' height='60'></td>
+                            <th>Current success rate</th>
+                        </tr>
+                        <tr>
+                            <td id='current-success-rate'>87%</td>
+                        </tr>
+                        <tr>
+                            <td rowspan='2'><img
+                                    src='./lastSuccess.svg'
+                                    width='60' height='60'></td>
+                            <th>Last success rate</th>
+                        </tr>
+                        <tr>
+                            <td id='last-success-rate'>00:00:48</td>
+                        </tr>
+                        <tr>
+                            <td rowspan='2'><img
+                                    src='./clock.svg'
+                                    width='60' height='60'></td>
+                            <th>Average Test Time</th>
+                        </tr>
+                        <tr>
+                            <td id='average-time'>Asd</td>
+                        </tr>
+                    </table>
+                    <table id='resume-pie-chart'>
+                        <tr id='piechart'></tr>
+                    </table>
+                </div>
+                <div id='resume-column-stacked-chart'>
+                    <div id='stackedchart'></div>
+                </div>
+                <div id='resume-column-chart'>
+                    <div id='columnchart'></div>
+                </div>
+            </div>
+        </div>
+
+        <div class='right-panel'>
+            <table>
+                <thead>
+                    <div id='rightPanelHeaderDiv'>
+                        <tr id='rightPanelHeader'>
+                            <th class='column1'>Test Suite</th>
+                            <th class='column2'>Test ID</th>
+                            <th class='column3'>Duration</th>
+                            <th class='column4'>Status</th>
+                            <th class='column5'>Actions</th>
+                            <th class='column6'>Conditions</th>
+                        </tr>
+                    </div>
+                </thead>
+                <tbody id='evidenceTable'></tbody>
+            </table>
+        </div>
+
+    </div>
+</body>
+<script type='text/javascript' src='./../../../src/test/resources/report/loader.js'></script>
+<script type='text/javascript'>
+
+    // RESUME VARIABLES
+    document.getElementById('test-suites-involved').innerHTML = '3';
+    document.getElementById('tests-executed').innerHTML = '230';
+    document.getElementById('total-execution-time').innerHTML = '03:32:16';
+    document.getElementById('current-success-rate').innerHTML = '87%';
+    document.getElementById('last-success-rate').innerHTML = '60%';
+    document.getElementById('average-time').innerHTML = '00:00:48';
+
+    // PIE CHART VARIABLES
+    var passedPieChart = 123;
+    var failesPieChart = 34;
+    var passedWithFailuresPieChart = 4;
+
+    // STACKED CHART VARIABLES
+    var dataTableStackedChart = [['Genre', 'PASSED', 'FAILED', 'PASSED WITH FAILURES']];
+    dataTableStackedChart.push(['01/03/23', 10, 24, 20]);
+    dataTableStackedChart.push(['03/03/23', 16, 22, 23]);
+    dataTableStackedChart.push(['06/03/23', 28, 19, 29]);
+    dataTableStackedChart.push(['07/03/23', 28, 19, 29]);
+    console.log(dataTableStackedChart);
+
+    // COLUMN CHART VARIABLES
+    var dataTableColumnChart = [['Test Suite', 'PASSED', 'FAILED', 'PASSED WITH FAILURES']];
+    dataTableColumnChart.push(['Home', 10, 24, 20]);
+    dataTableColumnChart.push(['Forms', 16, 22, 23]);
+    dataTableColumnChart.push(['Elements', 28, 19, 29]);
+    dataTableColumnChart.push(['Widgets', 10, 24, 20]);
+    console.log(dataTableColumnChart);
+
+
+    // RIGHT COLUMN DATA
+    var evidenceData = [
+        ['Home', 'Home_TC01', '00:00:16', 'PASSED', '3', '12'],
+        ['Home', 'Home_TC02', '00:12:16', 'PASSED WITH FAILURES', '3', '12'],
+        ['Home', 'Home_TC03', '00:00:16', 'FAILED', '3', '12'],
+        ['Home', 'Home_TC04', '00:02:16', 'PASSED', '3', '12'],
+        ['Home', 'Home_TC05', '00:00:16', 'PASSED', '3', '12'],
+        ['Home', 'Home_TC06', '00:00:16', 'PASSED', '3', '12'],
+        ['Home', 'Home_TC07', '00:00:16', 'PASSED WITH FAILURES', '3', '12'],
+        ['Home', 'Home_TC08', '01:40:16', 'FAILED', '3', '12'],
+        ['Home', 'Home_TC09', '00:00:16', 'PASSED', '3', '12'],
+        ['Home', 'Home_TC10', '00:03:16', 'PASSED', '3', '12'],
+        ['Forms', 'Forms_TC01', '00:00:16', 'PASSED', '3', '12'],
+        ['Forms', 'Forms_TC02', '00:00:16', 'PASSED WITH FAILURES', '3', '12'],
+        ['Forms', 'Forms_TC03', '00:00:16', 'PASSED', '3', '12'],
+        ['Forms', 'Forms_TC04', '00:04:16', 'FAILED', '3', '12'],
+        ['Forms', 'Forms_TC05', '00:04:16', 'FAILED', '3', '12'],
+        ['Forms', 'Forms_TC06', '00:04:16', 'FAILED', '3', '12'],
+        ['Home', 'Home_TC10', '00:03:16', 'PASSED', '3', '12'],
+        ['Forms', 'Forms_TC01', '00:00:16', 'PASSED', '3', '12'],
+        ['Forms', 'Forms_TC02', '00:00:16', 'PASSED WITH FAILURES', '3', '12'],
+        ['Forms', 'Forms_TC03', '00:00:16', 'PASSED', '3', '12'],
+        ['Forms', 'Forms_TC04', '00:04:16', 'FAILED', '3', '12'],
+        ['Forms', 'Forms_TC05', '00:04:16', 'FAILED', '3', '12'],
+        ['Forms', 'Forms_TC06', '00:04:16', 'FAILED', '3', '12'],
+        ['Home', 'Home_TC02', '00:12:16', 'PASSED WITH FAILURES', '3', '12'],
+        ['Home', 'Home_TC03', '00:00:16', 'FAILED', '3', '12'],
+        ['Home', 'Home_TC04', '00:02:16', 'PASSED', '3', '12'],
+        ['Home', 'Home_TC05', '00:00:16', 'PASSED', '3', '12'],
+        ['Home', 'Home_TC06', '00:00:16', 'PASSED', '3', '12'],
+        ['Home', 'Home_TC07', '00:00:16', 'PASSED WITH FAILURES', '3', '12'],
+        ['Home', 'Home_TC08', '01:40:16', 'FAILED', '3', '12'],
+        ['Home', 'Home_TC09', '00:00:16', 'PASSED', '3', '12'],
+        ['Home', 'Home_TC10', '00:03:16', 'PASSED', '3', '12'],
+        ['Forms', 'Forms_TC01', '00:00:16', 'PASSED', '3', '12'],
+        ['Forms', 'Forms_TC02', '00:00:16', 'PASSED WITH FAILURES', '3', '12'],
+        ['Forms', 'Forms_TC03', '00:00:16', 'PASSED', '3', '12'],
+        ['Forms', 'Forms_TC04', '00:04:16', 'FAILED', '3', '12'],
+        ['Forms', 'Forms_TC05', '00:04:16', 'FAILED', '3', '12'],
+        ['Forms', 'Forms_TC06', '00:04:16', 'FAILED', '3', '12'],
+        ['Home', 'Home_TC10', '00:03:16', 'PASSED', '3', '12'],
+        ['Forms', 'Forms_TC01', '00:00:16', 'PASSED', '3', '12'],
+        ['Forms', 'Forms_TC02', '00:00:16', 'PASSED WITH FAILURES', '3', '12'],
+        ['Forms', 'Forms_TC03', '00:00:16', 'PASSED', '3', '12'],
+        ['Forms', 'Forms_TC04', '00:04:16', 'FAILED', '3', '12'],
+        ['Forms', 'Forms_TC05', '00:04:16', 'FAILED', '3', '12'],
+        ['Forms', 'Forms_TC06', '00:04:16', 'FAILED', '3', '12'],
+        ['Home', 'Home_TC02', '00:12:16', 'PASSED WITH FAILURES', '3', '12'],
+        ['Home', 'Home_TC03', '00:00:16', 'FAILED', '3', '12'],
+        ['Home', 'Home_TC04', '00:02:16', 'PASSED', '3', '12'],
+        ['Home', 'Home_TC05', '00:00:16', 'PASSED', '3', '12'],
+        ['Home', 'Home_TC06', '00:00:16', 'PASSED', '3', '12'],
+        ['Home', 'Home_TC07', '00:00:16', 'PASSED WITH FAILURES', '3', '12'],
+        ['Home', 'Home_TC08', '01:40:16', 'FAILED', '3', '12'],
+        ['Home', 'Home_TC09', '00:00:16', 'PASSED', '3', '12'],
+        ['Home', 'Home_TC10', '00:03:16', 'PASSED', '3', '12'],
+        ['Forms', 'Forms_TC01', '00:00:16', 'PASSED', '3', '12'],
+        ['Forms', 'Forms_TC02', '00:00:16', 'PASSED WITH FAILURES', '3', '12'],
+        ['Forms', 'Forms_TC03', '00:00:16', 'PASSED', '3', '12'],
+        ['Forms', 'Forms_TC04', '00:04:16', 'FAILED', '3', '12'],
+        ['Forms', 'Forms_TC05', '00:04:16', 'FAILED', '3', '12'],
+        ['Forms', 'Forms_TC06', '00:04:16', 'FAILED', '3', '12'],
+        ['Home', 'Home_TC10', '00:03:16', 'PASSED', '3', '12'],
+        ['Forms', 'Forms_TC01', '00:00:16', 'PASSED', '3', '12'],
+        ['Forms', 'Forms_TC02', '00:00:16', 'PASSED WITH FAILURES', '3', '12'],
+        ['Forms', 'Forms_TC03', '00:00:16', 'PASSED', '3', '12'],
+        ['Forms', 'Forms_TC04', '00:04:16', 'FAILED', '3', '12'],
+        ['Forms', 'Forms_TC05', '00:04:16', 'FAILED', '3', '12'],
+        ['Forms', 'Forms_TC06', '00:04:16', 'FAILED', '3', '12'],
+        ['Home', 'Home_TC02', '00:12:16', 'PASSED WITH FAILURES', '3', '12'],
+        ['Home', 'Home_TC03', '00:00:16', 'FAILED', '3', '12'],
+        ['Home', 'Home_TC04', '00:02:16', 'PASSED', '3', '12'],
+        ['Home', 'Home_TC05', '00:00:16', 'PASSED', '3', '12'],
+        ['Home', 'Home_TC06', '00:00:16', 'PASSED', '3', '12'],
+        ['Home', 'Home_TC07', '00:00:16', 'PASSED WITH FAILURES', '3', '12'],
+        ['Home', 'Home_TC08', '01:40:16', 'FAILED', '3', '12'],
+        ['Home', 'Home_TC09', '00:00:16', 'PASSED', '3', '12'],
+        ['Home', 'Home_TC10', '00:03:16', 'PASSED', '3', '12'],
+        ['Forms', 'Forms_TC01', '00:00:16', 'PASSED', '3', '12'],
+        ['Forms', 'Forms_TC02', '00:00:16', 'PASSED WITH FAILURES', '3', '12'],
+        ['Forms', 'Forms_TC03', '00:00:16', 'PASSED', '3', '12'],
+        ['Forms', 'Forms_TC04', '00:04:16', 'FAILED', '3', '12'],
+        ['Forms', 'Forms_TC05', '00:04:16', 'FAILED', '3', '12'],
+        ['Forms', 'Forms_TC06', '00:04:16', 'FAILED', '3', '12'],
+        ['Home', 'Home_TC10', '00:03:16', 'PASSED', '3', '12'],
+        ['Forms', 'Forms_TC01', '00:00:16', 'PASSED', '3', '12'],
+        ['Forms', 'Forms_TC02', '00:00:16', 'PASSED WITH FAILURES', '3', '12'],
+        ['Forms', 'Forms_TC03', '00:00:16', 'PASSED', '3', '12'],
+        ['Forms', 'Forms_TC04', '00:04:16', 'FAILED', '3', '12'],
+        ['Forms', 'Forms_TC05', '00:04:16', 'FAILED', '3', '12'],
+        ['Forms', 'Forms_TC06', '00:04:16', 'FAILED', '3', '12']
+    ];
+
+    // Load google charts
+    google.charts.load('current', { 'packages': ['corechart'] });
+    google.charts.setOnLoadCallback(drawPieChart);
+    google.charts.setOnLoadCallback(drawStackedChart);
+    google.charts.setOnLoadCallback(drawColumnChart);
+
+    // Draw the chart and set the chart values
+    function drawPieChart() {
+        var data = google.visualization.arrayToDataTable([
+            ['Status', 'Tests'],
+            ['PASSED', passedPieChart],
+            ['FAILED', failesPieChart],
+            ['PASSED WITH FAILURES', passedWithFailuresPieChart]
+        ]);
+        var options = {
+            slices: {
+                0: { color: '#00aa9b' },
+                1: { color: '#f04641' },
+                2: { color: '#005573' }
+            },
+            legend: { position: 'none' },
+            chartArea: { width: 300, height: 180 }
+        };
+        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+        chart.draw(data, options);
+    }
+
+    function drawStackedChart() {
+        var data = google.visualization.arrayToDataTable(dataTableStackedChart);
+        var options_fullStacked = {
+            isStacked: true,
+            legend: { position: 'top', maxLines: 3 },
+            vAxis: { minValue: 0 },
+            series: {
+                0: {
+                    // set options for the first data series
+                    color: '#00aa9b'
+                },
+                1: {
+                    // set options for the second data series
+                    color: '#f04641'
+                },
+                2: {
+                    // set options for the third data series
+                    color: '#005573'
+                }
+            }
+        };
+        var chart = new google.visualization.AreaChart(document.getElementById('stackedchart'));
+        chart.draw(data, options_fullStacked);
+    }
+
+    function drawColumnChart() {
+        var data = google.visualization.arrayToDataTable(dataTableColumnChart);
+        var options = {
+            isStacked: true,
+            legend: { position: 'top', maxLines: 3 },
+            vAxis: { minValue: 0 },
+            series: {
+                0: { color: '#00aa9b' },
+                1: { color: '#f04641' },
+                2: { color: '#005573' }
+            }
+        };
+        var chart = new google.visualization.ColumnChart(document.getElementById('columnchart'));
+        chart.draw(data, options);
+    }
+
+    evidenceData.forEach(element => {
+        document.getElementById('evidenceTable').innerHTML += "<tr height='30px'><td class='column1'>" + element[0] + "</td><td class='column2'>" + element[1] + "</td><td class='column3'>" + element[2] + "</td><td class='column4'>" + element[3] + "</td><td class='column5'>" + element[4] + "</td><td class='column6'>" + element[5] + "</td></tr>";
+    });
+
+    // When the user scrolls the page, execute myFunction
+    window.onscroll = function () { myFunction() };
+
+    // Get the header
+    var headerRightPanel = document.getElementById("rightPanelHeader");
+
+    // Get the offset position of the navbar
+    var sticky = headerRightPanel.offsetTop;
+
+    // Add the sticky class to the header when you reach its scroll position. Remove "sticky" when you leave the scroll position
+    function myFunction() {
+        if (window.pageYOffset > sticky) {
+            headerRightPanel.classList.add("sticky");
+        } else {
+            headerRightPanel.classList.remove("sticky");
+        }
+    }
+</script>
+
+</html>

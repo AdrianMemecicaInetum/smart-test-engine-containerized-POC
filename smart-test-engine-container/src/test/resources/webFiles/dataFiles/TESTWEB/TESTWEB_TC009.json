@@ -1,0 +1,17 @@
+{
+    "PRE":
+    {
+        "FullName": "Name",
+        "Email": "Name@email.com",
+        "CurrentAddress": "My other house",
+        "PermanentAddress": "My house"
+    },
+
+    "DEV" : 
+    {
+        "FullName": "Name",
+        "Email": "Name@email.com",
+        "CurrentAddress": "My other house",
+        "PermanentAddress": "My house"
+    }
+}

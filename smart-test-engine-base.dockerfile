@@ -8,11 +8,8 @@ RUN apt-get update && apt-get install -y \
     unzip \
     && rm -rf /var/lib/apt/lists/*
 
-# Arguments for Git personal access token and repository URL
-ARG GIT_PAT
-ARG GIT_REPO_URL
 
-RUN git clone https://${GIT_PAT}@${GIT_REPO_URL} /app
+COPY smart-test-engine-container  /app
 
 # Install required libraries for Chrome and ChromeDriver
 RUN apt-get update && apt-get install -y \
