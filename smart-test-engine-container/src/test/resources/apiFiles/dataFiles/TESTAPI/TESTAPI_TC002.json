@@ -1,0 +1,9 @@
+{
+    "PRE": {
+        "TESTAPI_TC002_step1": {
+            "url": "https://reqres.in/api/users",
+            "status": "201",
+            "rawBody" : "{\"name\": \"Name\", \"job\": \"My work\"}"
+        }
+    }
+}
