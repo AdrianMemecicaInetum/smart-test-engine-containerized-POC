@@ -1,4 +1,4 @@
-FROM adrianinetum2/smarttestengine:v1
+FROM adrianinetum2/smart-test-engine-base:v1
 
 ARG GIT_PAT
 ARG GIT_REPO_URL
