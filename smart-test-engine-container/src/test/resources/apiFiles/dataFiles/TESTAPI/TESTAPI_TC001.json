@@ -1,8 +1,0 @@
-{
-    "PRE" : {
-      "TESTAPI_TC001_step1" : {
-        "url" : "https://reqres.in/api/users?page=2",
-        "status" : "200"
-      }
-    }
-  }

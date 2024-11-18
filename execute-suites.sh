@@ -1,26 +1,60 @@
-# entrypoint.sh
-#!/bin/bash CREAR LA BUILD Y LUEGO EJECUTAR LO DE DESPUES
+#!/bin/bash
+set -x  # Enable debug mode
 
 IMAGE_NAME="execution-image"
 CONTAINER_NAME="execution-container"
-GITHUB_REPO2="github.com/PabloCastillo-Inetum/DevOps_Docker.git"
-PAT="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"
+GITHUB_REPO="github.com/PabloCastillo-Inetum/DevOps_Docker.git"
 
-podman build --build-arg GIT_PAT="$PAT" --build-arg GIT_REPO_URL="$GITHUB_REPO2" -t "$IMAGE_NAME" -f execution.dockerfile .
+# Remove and initialize Podman machine
+podman machine rm -f
+podman machine init
+podman machine start
 
-podman run -d --name "$CONTAINER_NAME" "$IMAGE_NAME" mvn clean test -Dtest=TESTWEB
+# Load the PAT from the .env file
+if [ -f ".env" ]; then
+    export $(grep -v '^#' .env | xargs)
+else
+    echo "The .env file is missing. Please create one with your environment variables."
+    exit 1
+fi
 
-sleep 540
+# Verify the PAT is set
+if [ -z "$PAT" ]; then
+    echo "The Personal Access Token (PAT) is not defined in the .env file."
+    exit 1
+fi
 
-podman exec "$CONTAINER_NAME" rm -rf /home/Reports/*
-podman exec "$CONTAINER_NAME" whoami
-echo "Carpeta framework:"
-podman exec "$CONTAINER_NAME" ls -l resume-report/
-echo "Carpeta git:"
-podman exec "$CONTAINER_NAME" ls -l /home/Reports/
-echo "Carpeta actual:"
-podman exec "$CONTAINER_NAME" ls -l 
-podman exec "$CONTAINER_NAME" cp -r /app/resume-report/* /home/Reports/
-podman exec "$CONTAINER_NAME" bash -c "cd /home && git add . && git commit -m 'Updated Reports' && git push"
+# Clone the repository locally
+echo "Cloning the repository..."
+git clone https://${PAT}@${GITHUB_REPO} repo
 
-echo "Process completed successfully."
+# Verify that the repository was cloned successfully
+if [ ! -d "repo" ]; then
+    echo "Failed to clone the repository."
+    exit 1
+fi
+
+# Build the Docker image
+podman build -t "$IMAGE_NAME" -f execution.dockerfile
+
+# Convert Windows paths to Linux paths for Podman
+
+# Run the container, mounting the directories
+podman run --name "$CONTAINER_NAME" \
+  -v "./repo/tests:/app/src/test/java/web/TestSuites" \
+  -v "./repo/resume-report:/app/resume-report" \
+  "$IMAGE_NAME" clean test -Dtest=TESTWEB
+
+# Wait for the container to finish
+podman wait "$CONTAINER_NAME"
+
+# Verify if the resume-report directory exists
+podman exec "$CONTAINER_NAME" ls -l /app/resume-report
+
+# Copy the resume-report directory from the container to the host
+podman cp "$CONTAINER_NAME":/app/resume-report .
+
+echo "Process completed successfully!"
+
+# Optional: Clean up the cloned repository
+# rm -rf repo
