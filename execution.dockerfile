@@ -1,13 +1,11 @@
-FROM adrianinetum2/smart-test-engine-base:v1
+FROM adrianinetum2/smarttestengine:v1
 
+# Set work directory
 WORKDIR /app
 
-# Create necessary directories
-RUN mkdir -p src/test/java/web/TestSuites
-RUN mkdir -p resume-report
+# Copy tests and reports from the build context
+COPY Tests /app/src/test/java/web/TestSuites
+COPY Reports /app/resume-report
 
-# Run Maven installation
+# Install dependencies (if needed)
 RUN mvn clean install
-
-# Set entry point
-ENTRYPOINT ["mvn"]

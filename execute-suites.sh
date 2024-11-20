@@ -1,52 +1,42 @@
 #!/bin/bash
-set -x  # Enable debug mode
+set -e  # Exit on errors
 
-IMAGE_NAME="execution-image"
-CONTAINER_NAME="execution-container"
-GITHUB_REPO="github.com/PabloCastillo-Inetum/DevOps_Docker.git"
-
-# Remove and initialize Podman machine
-podman machine rm -f
-podman machine init
-podman machine start
-
-# Load the PAT from the .env file
-if [ -f ".env" ]; then
+# Load environment variables from .env file if it exists
+if [ -f .env ]; then
+    # Export all variables from .env file
     export $(grep -v '^#' .env | xargs)
-else
-    echo "The .env file is missing. Please create one with your environment variables."
-    exit 1
 fi
 
-# Verify the PAT is set
+# Configurable Variables
+IMAGE_NAME="adrianinetum2/smarttestengine:v1"
+CONTAINER_NAME="execution-container"
+GITHUB_REPO_URL="github.com/PabloCastillo-Inetum/DevOps_Docker.git"
+CURRENT_DIR="/c/Users/adrian.memecica/Desktop/smart-test-engine-containerized-POC/v2.0/smart-test-engine-containerized-POC"
+
+# Ensure PAT is passed as an environment variable
 if [ -z "$PAT" ]; then
-    echo "The Personal Access Token (PAT) is not defined in the .env file."
+    echo "Error: PAT is not set. Exiting."
     exit 1
 fi
 
-# Clone the repository locally
-echo "Cloning the repository..."
-git clone https://${PAT}@${GITHUB_REPO} C:/ResourcesRepo
+# Clone the repository on the host
+echo "Cloning repository..."
+git clone https://${PAT}@${GITHUB_REPO_URL} repo
 
-# Verify that the repository was cloned successfully
-if [ ! -d "repo" ]; then
-    echo "Failed to clone the repository."
-    exit 1
-fi
-
-# Build the Docker image
-podman build -t "$IMAGE_NAME" -f execution.dockerfile
-
-# Run the container, mounting the directories
-podman run -d --name "$CONTAINER_NAME" \
-    -v "$REPO_PATH\Tests:/app/src/test/java/web/TestSuites" \
-    -v "$REPO_PATH\Reports:/app/resume-report" \
+# Run the container and mount the necessary folders
+echo "Running container..."
+podman run --name "$CONTAINER_NAME" \
+    --mount type=bind,source="$CURRENT_DIR/repo/Tests",target=/app/src/test/java/web/TestSuites \
+    --mount type=bind,source="$CURRENT_DIR/repo/Reports",target=/app/resume-report \
     "$IMAGE_NAME" mvn clean test -Dtest=TESTWEB
 
+
 # Wait for the container to finish
+echo "Waiting for the container to finish..."
 podman wait "$CONTAINER_NAME"
 
-# Copy the resume-report directory from the container to the host
-podman cp "$CONTAINER_NAME":/app/resume-report .
 
-echo "Process completed successfully!"
+# Cleanup
+
+
+echo "Process completed successfully."
