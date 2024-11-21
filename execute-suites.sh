@@ -1,52 +1,61 @@
 #!/bin/bash
-set -x  # Enable debug mode
+set -e  # Se aborta si hay algun error
 
-IMAGE_NAME="execution-image"
+# Carga el .evn si existe
+if [ -f .env ]; then
+    # Exporta las variables del .env
+    export $(grep -v '^#' .env | xargs)
+fi
+
+# Variables configurables
+#Nombre de la imagen subida a dockerhub, que contiene el STE
+IMAGE_NAME="adrianinetum2/smarttestengine:v1"
+#Nombre del contenedor que se ejecutara
 CONTAINER_NAME="execution-container"
-GITHUB_REPO="github.com/PabloCastillo-Inetum/DevOps_Docker.git"
+#Ejemplo de URL de un repositorio privado
+GITHUB_REPO_URL="github.com/PabloCastillo-Inetum/DevOps_Docker.git"
+#Configura tu ruta actual, el uso de pwd da problemas en windows
+CURRENT_DIR="/c/Users/adrian.memecica/Desktop/smart-test-engine-containerized-POC/v2.0/smart-test-engine-containerized-POC"
 
-# Remove and initialize Podman machine
+# asegura que el token de acceso a github este definido
+if [ -z "$PAT" ]; then
+    echo "Error: PAT is not set. Exiting."
+    exit 1
+fi
+
+# Clone the repository on the host
+echo "Cloning repository..."
+git clone https://${PAT}@${GITHUB_REPO_URL} repo
+
+
+
+# Maquina nueva
 podman machine rm -f
 podman machine init
 podman machine start
 
-# Load the PAT from the .env file
-if [ -f ".env" ]; then
-    export $(grep -v '^#' .env | xargs)
-else
-    echo "The .env file is missing. Please create one with your environment variables."
-    exit 1
-fi
-
-# Verify the PAT is set
-if [ -z "$PAT" ]; then
-    echo "The Personal Access Token (PAT) is not defined in the .env file."
-    exit 1
-fi
-
-# Clone the repository locally
-echo "Cloning the repository..."
-git clone https://${PAT}@${GITHUB_REPO} C:/ResourcesRepo
-
-# Verify that the repository was cloned successfully
-if [ ! -d "repo" ]; then
-    echo "Failed to clone the repository."
-    exit 1
-fi
-
-# Build the Docker image
-podman build -t "$IMAGE_NAME" -f execution.dockerfile
-
-# Run the container, mounting the directories
-podman run -d --name "$CONTAINER_NAME" \
-    -v "$REPO_PATH\Tests:/app/src/test/java/web/TestSuites" \
-    -v "$REPO_PATH\Reports:/app/resume-report" \
+# Se ejecuta el contenedor y se montan los volumenes, los tests suites que se quieren ejecutar se pueden modificar en el parametro -Dtest
+echo "Running container..."
+podman run --name "$CONTAINER_NAME" \
+    --mount "type=bind,source=$CURRENT_DIR/repo/Tests,target=/app/src/test/java/web/TestSuites" \
+    --mount "type=bind,source=$CURRENT_DIR/repo/Reports,target=/app/resume-report" \
     "$IMAGE_NAME" mvn clean test -Dtest=TESTWEB
 
-# Wait for the container to finish
+
+# esperamos que acabe el contenedor
+echo "Waiting for the container to finish..."
 podman wait "$CONTAINER_NAME"
 
-# Copy the resume-report directory from the container to the host
-podman cp "$CONTAINER_NAME":/app/resume-report .
 
-echo "Process completed successfully!"
+# se hace el comit de los reportes, desde la carpeta report
+echo "Committing reports..."
+cd repo
+git add .
+git commit -m "Automated commit - $(date)"
+git push 
+cd ..
+
+#borramos el repositorio para que no se haga commits innecesarios y el script se pueda reutilizar
+rm -rf repo
+
+echo "Process completed successfully."
