@@ -95,11 +95,11 @@ El script `execute-suites.sh` realiza las siguientes acciones:
    - Navega al directorio del repositorio clonado.
    - Añade todos los cambios con `git add .`.
    - Realiza un commit con un mensaje automático que incluye la fecha.
-   - Empuja los cambios al repositorio remoto con `git push origin head`.
+   - Pushea los cambios al repositorio remoto con `git push origin head`.
 
 8. **Limpieza:**
 
-   - Regresa al directorio anterior y elimina el directorio del repositorio clonado con `rm -rf repo`.
+   - Regresa al directorio anterior y elimina el directorio del repositorio clonado con `rm -rf repo` para que no se haga commits innecesarios y el script se pueda reutilizar
 
 ## Notas Adicionales
 

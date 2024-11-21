@@ -8,10 +8,13 @@ if [ -f .env ]; then
 fi
 
 # Variables configurables
+#Nombre de la imagen subida a dockerhub, que contiene el STE
 IMAGE_NAME="adrianinetum2/smarttestengine:v1"
+#Nombre del contenedor que se ejecutara
 CONTAINER_NAME="execution-container"
+#Ejemplo de URL de un repositorio privado
 GITHUB_REPO_URL="github.com/PabloCastillo-Inetum/DevOps_Docker.git"
-#Configura tu ruta 
+#Configura tu ruta actual, el uso de pwd da problemas en windows
 CURRENT_DIR="/c/Users/adrian.memecica/Desktop/smart-test-engine-containerized-POC/v2.0/smart-test-engine-containerized-POC"
 
 # asegura que el token de acceso a github este definido
