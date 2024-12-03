@@ -13,7 +13,7 @@ IMAGE_NAME="adrianinetum2/smarttestengine:v1"
 #Nombre del contenedor que se ejecutara
 CONTAINER_NAME="execution-container"
 #Ejemplo de URL de un repositorio privado
-GITHUB_REPO_URL="github.com/PabloCastillo-Inetum/DevOps_Docker.git"
+GITHUB_REPO_URL="github.com/AdrianMemecicaInetum/DevOps_Docker_Reports_Tests.git"
 #Configura tu ruta actual, el uso de pwd da problemas en windows
 CURRENT_DIR="/c/Users/adrian.memecica/Desktop/smart-test-engine-containerized-POC/v2.0/smart-test-engine-containerized-POC"
 
@@ -47,12 +47,12 @@ echo "Waiting for the container to finish..."
 podman wait "$CONTAINER_NAME"
 
 
-# se hace el comit de los reportes, desde la carpeta report
+# se hace el commit de los reportes, desde la carpeta report
 echo "Committing reports..."
 cd repo
 git add .
 git commit -m "Automated commit - $(date)"
-git push 
+git push https://${USERNAME}:${PAT}@${GITHUB_REPO_URL}
 cd ..
 
 #borramos el repositorio para que no se haga commits innecesarios y el script se pueda reutilizar

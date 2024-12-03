@@ -24,6 +24,7 @@ Este proyecto permite ejecutar pruebas de **Smart Test Engine** dentro de un con
 Para clonar y hacer push a un repositorio privado, necesitas un Token de Acceso Personal (PAT) de GitHub con los permisos adecuados.
 
 1. Sigue este [tutorial para generar un PAT de GitHub](https://www.geeksforgeeks.org/how-to-generate-personal-access-token-in-github/).
+2. Crea un token fine-grained.
 2. Al crear el PAT, selecciona los siguientes permisos:
 
    ![Permisos PAT](resources/ss-generate-PAT-permissions.png)
@@ -38,6 +39,7 @@ Para clonar y hacer push a un repositorio privado, necesitas un Token de Acceso 
     ```bash
     PAT=tu_token_de_acceso_personal
     GITHUB_REPO_URL=github.com/tu_usuario/tu_repositorio.git
+    USERNAME=tu_usuario
     ```
 
    **Nota:** No incluyas `https://` en la URL del repositorio.
@@ -95,7 +97,7 @@ El script `execute-suites.sh` realiza las siguientes acciones:
    - Navega al directorio del repositorio clonado.
    - Añade todos los cambios con `git add .`.
    - Realiza un commit con un mensaje automático que incluye la fecha.
-   - Pushea los cambios al repositorio remoto con `git push origin head`.
+   - Pushea los cambios al repositorio remoto con `git push https://${USERNAME}:${PAT}@${GITHUB_REPO_URL}`.
 
 8. **Limpieza:**
 
