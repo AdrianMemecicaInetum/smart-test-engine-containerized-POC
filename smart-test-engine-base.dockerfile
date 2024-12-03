@@ -1,21 +1,11 @@
 FROM maven:3.9.6-eclipse-temurin-22-jammy
 WORKDIR /app
 
-# Install necessary packages
-RUN apt-get update && apt-get install -y \
+# Install necessary packages and Chrome dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
     wget \
     git \
     unzip \
-    && rm -rf /var/lib/apt/lists/*
-
-# Arguments for Git personal access token and repository URL
-ARG GIT_PAT
-ARG GIT_REPO_URL
-
-RUN git clone https://${GIT_PAT}@${GIT_REPO_URL} /app
-
-# Install required libraries for Chrome and ChromeDriver
-RUN apt-get update && apt-get install -y \
     libglib2.0-0 \
     libnss3 \
     libgconf-2-4 \
@@ -37,30 +27,28 @@ RUN apt-get update && apt-get install -y \
     libdrm2 \
     libgbm1 \
     libpango1.0-0 \
-    --no-install-recommends && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/*
 
-# Set up Chrome
+COPY smart-test-engine-container /app
+
+# Set up Chrome and ChromeDriver versions as build arguments
+ARG CHROME_VERSION="130.0.6723.69"
+ARG CHROMEDRIVER_VERSION="130.0.6723.69"
+
+# Install Chrome
 RUN mkdir -p src/test/resources/webFiles/ \
-    && wget https://storage.googleapis.com/chrome-for-testing-public/130.0.6723.69/linux64/chrome-linux64.zip \
+    && wget https://storage.googleapis.com/chrome-for-testing-public/${CHROME_VERSION}/linux64/chrome-linux64.zip \
     && unzip chrome-linux64.zip -d /opt/ \
     && mv /opt/chrome-linux64 /opt/chrome \
-    && rm chrome-linux64.zip
+    && rm chrome-linux64.zip \
+    && chmod +x /opt/chrome/chrome
 
 ENV CHROME_BIN="/opt/chrome/chrome"
-RUN chmod +x /opt/chrome/chrome
 
-# Set up ChromeDriver
-RUN wget https://storage.googleapis.com/chrome-for-testing-public/130.0.6723.69/linux64/chromedriver-linux64.zip \
+# Install ChromeDriver
+RUN wget https://storage.googleapis.com/chrome-for-testing-public/${CHROMEDRIVER_VERSION}/linux64/chromedriver-linux64.zip \
     && unzip chromedriver-linux64.zip -d /tmp/ \
     && mv /tmp/chromedriver-linux64/chromedriver src/test/resources/webFiles/chromedriver \
     && chmod +x src/test/resources/webFiles/chromedriver \
     && rm -rf /tmp/chromedriver-linux64 \
     && rm chromedriver-linux64.zip
-
-# Verify that chromedriver exists at the expected path
-RUN ls -l /app/src/test/resources/webFiles/chromedriver
-
-# Verify installations
-RUN ls -l /opt/chrome/chrome
-RUN /opt/chrome/chrome --version
-RUN src/test/resources/webFiles/chromedriver --version
